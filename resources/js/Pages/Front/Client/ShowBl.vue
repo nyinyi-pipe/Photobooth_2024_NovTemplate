@@ -164,25 +164,25 @@ export default {
       const printctx = renderImages("print-canvas", 4);
 
       const addText = (ctx) => {
-        showctx.font = "13px ahronbd";
-        showctx.fillStyle = "#ffffff";
-        showctx.fillText("FOTOAUTOMAT", 48, 16);
-        showctx.fillText("FOTOAUTOMAT", 243, 16);
+        ctx.font = "13px ahronbd";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("FOTOAUTOMAT", 48, 16);
+        ctx.fillText("FOTOAUTOMAT", 243, 16);
 
-        showctx.font = "15px Dancing Script";
-        showctx.fillStyle = "#ffffff";
-        showctx.fillText("Aung", 52, 555);
-        showctx.fillText("Aung", 245, 555);
+        ctx.font = "15px Dancing Script";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("Aung", 52, 555);
+        ctx.fillText("Aung", 245, 555);
 
-        showctx.fillText("&", 87, 556);
-        showctx.fillText("&", 281, 556);
+        ctx.fillText("&", 87, 556);
+        ctx.fillText("&", 281, 556);
 
-        showctx.fillText("Theint", 100, 556);
-        showctx.fillText("Theint", 294, 556);
+        ctx.fillText("Theint", 100, 556);
+        ctx.fillText("Theint", 294, 556);
 
-        showctx.font = "11px Dancing Script";
-        showctx.fillText("June 3,2024", 70, 570);
-        showctx.fillText("June 3,2024", 264, 570);
+        ctx.font = "11px Dancing Script";
+        ctx.fillText("June 3,2024", 70, 570);
+        ctx.fillText("June 3,2024", 264, 570);
       };
 
       addText(showctx);
