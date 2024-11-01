@@ -3,13 +3,9 @@
     <div class="row g-3 justify-content-center">
       <div class="col-12 col-md-6">
         <div class="bg-white p-2 d-inline-block rounded-3">
-          <canvas id="my-canvas" width="384" height="576"></canvas>
-          <a
-            download="photobooth.jpeg"
-            id="download"
-            @click="download"
-            class="mt-3 d-block w-100 btn btn-sm btn-outline-primary"
-          >
+          <canvas id="my-canvas" width="800" height="1200"></canvas>
+          <a download="photobooth.jpeg" id="download" @click="download"
+            class="mt-3 d-block w-100 btn btn-sm btn-outline-primary">
             Print
           </a>
         </div>
@@ -20,8 +16,8 @@
 
 <script>
 export default {
-  props:{
-    photos:Object
+  props: {
+    photos: Object,
   },
   methods: {
     download() {
@@ -34,8 +30,17 @@ export default {
     },
   },
   mounted() {
-    const getContext = () =>
-      document.getElementById("my-canvas").getContext("2d");
+    const getContext = () => {
+      const canvas = document.getElementById("my-canvas");
+      const scale = 2; 
+      canvas.width = 800 * scale; 
+      canvas.height = 1200 * scale; 
+      canvas.style.width = "386px"; 
+      canvas.style.height = "576px"; 
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale); 
+      return ctx;
+    };
 
     const loadImage = (url) => {
       return new Promise((resolve, reject) => {
@@ -51,9 +56,9 @@ export default {
       const ctx = getContext();
       const myOptions = Object.assign({}, options);
       return loadImage(myOptions.uri).then((img) => {
-       if(myOptions.color == 'baw'){
-        ctx.filter = "grayscale(100%)";
-      }
+        if (myOptions.color == "baw") {
+          ctx.filter = "grayscale(100%)";
+        }
         ctx.drawImage(
           img,
           myOptions.x,
@@ -133,9 +138,8 @@ export default {
     ];
 
     imgs.forEach(depict);
+    
   },
 };
 </script>
-
-<style>
-</style>
+<style></style>

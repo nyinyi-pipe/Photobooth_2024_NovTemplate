@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Photo;
 use App\Models\Ticket;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Cache;
+use Intervention\Image\ImageManager;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class PhotoController extends Controller
 {
@@ -62,18 +64,41 @@ class PhotoController extends Controller
         return Inertia::render('Front/Client/CameraTest');
     }
 
-    public function store(Request $request):RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $code = session()->get('code');
         $ticket = Ticket::where('ticket_code', $code)->first();
-        if($ticket) {
+
+        if ($ticket) {
             $ticket->ticket_used = 1;
             $ticket->save();
-        };
+        }
+
+        $images = $request->images;
+        $resizedImages = [];
+
+        $manager = new ImageManager(array('driver' => 'gd'));
+
+        foreach ($images as $base64Image) {
+
+            $decodedImage = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
+
+            $image = $manager->make($decodedImage);
+
+            $image->resize(3840, 2160, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            $resizedImageData = 'data:image/' . $image->mime() . ';base64,' . base64_encode($image->encode($image->mime()));
+
+            $resizedImages[] = $resizedImageData;
+        }
+
         Photo::create([
-            'user_id'=>auth()->user()->id,
-            'image'=>json_encode($request->images),
-            'folder'=>auth()->user()->name
+            'user_id' => auth()->user()->id,
+            'image' => json_encode($resizedImages),
+            'folder' => auth()->user()->name,
         ]);
 
         return redirect()->route('photo.filter');

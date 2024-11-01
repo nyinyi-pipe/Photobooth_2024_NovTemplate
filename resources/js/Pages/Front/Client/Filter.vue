@@ -1,4 +1,5 @@
 <template>
+  <Head title="Photo" />
   <ClientLayout>
     <div
       class="py-2 vh-100 bg-white position-relative d-flex justify-content-center gap-5 align-items-center"

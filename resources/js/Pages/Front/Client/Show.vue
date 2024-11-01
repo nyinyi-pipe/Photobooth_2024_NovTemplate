@@ -1,18 +1,16 @@
 <template>
   <Head title="Photo" />
-  <div
-    class="vh-100 d-flex justify-content-center align-items-center position-relative"
-  >
+  <div class="vh-100 d-flex justify-content-center align-items-center position-relative">
     <div class="photo-container">
       <a @click="download" download="photobooth.jpeg" id="download">
         <canvas
-          style="cursor: pointer"
+          style="cursor: pointer; background-color: white !important"
           id="my-canvas"
           width="384"
           height="576"
         ></canvas>
         <canvas
-          style="cursor: pointer; display: none"
+          style="cursor: pointer; display: none; background-color: white !important"
           id="canvas"
           width="384"
           height="576"
@@ -37,8 +35,9 @@
   </div>
 </template>
 
-    <script>
+<script>
 import { Link, router, Head } from "@inertiajs/vue3";
+
 export default {
   props: {
     photos: Object,
@@ -47,60 +46,63 @@ export default {
     Link,
     Head,
   },
+  data() {
+    return {
+      
+    };
+  },
 
   methods: {
     download() {
+      const canvas = document.getElementById("canvas");
+      const dataURL = canvas
+        .toDataURL("image/jpeg", 1.0)
+        .replace("image/jpeg", "image/octet-stream");
+      const downloadLink = document.getElementById("download");
+      downloadLink.setAttribute("href", dataURL);
+
       window.onafterprint = () => {
         router.get("/photo/qrcode/" + this.photos.id);
       };
       window.print();
-      const download = document.getElementById("download");
-      const canvas = document
-        .getElementById("canvas")
-        .toDataURL("image/jpeg")
-        .replace("image/jpeg", "image/octet-stream");
-      download.setAttribute("href", canvas);
     },
-  },
+    updateCanvas() {
+      const logo = document.getElementById("logo");
 
-  created() {
-    document.querySelectorAll("#pics").forEach((pic) => {
-      pic.remove();
-    });
-  },
-  mounted() {
-    const logo = document.getElementById("logo");
-    const getContext = () =>
-      document.getElementById("my-canvas").getContext("2d");
+      const getContext = (canvasId, scale) => {
+        const canvas = document.getElementById(canvasId);
+        canvas.width = 384 * scale;
+        canvas.height = 576 * scale;
+        canvas.style.width = "384px";
+        canvas.style.height = "576px";
+        const ctx = canvas.getContext("2d");
+        ctx.scale(scale, scale);
+        return ctx;
+      };
 
-    const loadImage = (url) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error(`load ${url} fail`));
-        img.src = url;
-      });
-    };
+      const loadImage = (url) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = "Anonymous";
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error(`load ${url} fail`));
+          img.src = url;
+        });
+      };
 
-    const depict = (options) => {
-      const ctx = getContext();
-      const myOptions = Object.assign({}, options);
-      return loadImage(myOptions.uri).then((img) => {
-        if (myOptions.color == "baw") {
-          ctx.filter = "grayscale(100%)";
-        }
-        ctx.drawImage(
-          img,
-          myOptions.x,
-          myOptions.y,
-          myOptions.sw,
-          myOptions.sh
-        );
-      });
-    };
+      const depict = (options, ctx) => {
+        const myOptions = Object.assign({}, options);
+        return loadImage(myOptions.uri).then((img) => {
+          ctx.fillStyle = "white"; 
+          ctx.fillRect(0, 0, ctx.canvas.width / ctx.scale, ctx.canvas.height / ctx.scale);
+          if (myOptions.color == "baw") {
+            ctx.filter = "grayscale(100%)";
+          }
+          ctx.drawImage(img, myOptions.x, myOptions.y, myOptions.sw, myOptions.sh);
+        });
+      };
 
-    const imgs = [
+      const imgs = [
       {
         uri: this.photos.image[0],
         x: 12,
@@ -168,124 +170,73 @@ export default {
       },
     ];
 
-    imgs.forEach(depict);
+      const renderImages = (canvasId, scale) => {
+        const ctx = getContext(canvasId, scale);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, 384 * scale, 576 * scale);
+        imgs.forEach((img) => depict(img, ctx));
+        return ctx;
+      };
 
-    const showctx = document.getElementById("my-canvas").getContext("2d");
+      const showctx = renderImages("my-canvas", 2);
+      const ctx = renderImages("canvas", 4);
+      const printctx = renderImages("print-canvas", 4);
 
-    showctx.font = "13px ahronbd";
-    showctx.fillStyle = "#000000";
-    showctx.fillText("FOTOAUTOMAT", 48, 16);
-    showctx.fillText("FOTOAUTOMAT", 243, 16);
+      const addText = (ctx) => {
+        showctx.font = "13px ahronbd";
+        showctx.fillStyle = "#000000";
+        showctx.fillText("FOTOAUTOMAT", 48, 16);
+        showctx.fillText("FOTOAUTOMAT", 243, 16);
 
-    showctx.font = "15px Dancing Script";
-    showctx.fillStyle = "#000000";
-    showctx.fillText("Aung", 52, 555);
-    showctx.fillText("Aung", 245, 555);
+        showctx.font = "15px Dancing Script";
+        showctx.fillStyle = "#000000";
+        showctx.fillText("Aung", 52, 555);
+        showctx.fillText("Aung", 245, 555);
 
-    showctx.fillText("&", 87, 556);
-    showctx.fillText("&", 281, 556);
+        showctx.fillText("&", 87, 556);
+        showctx.fillText("&", 281, 556);
 
-    showctx.fillText("Theint", 100, 556);
-    showctx.fillText("Theint", 294, 556);
+        showctx.fillText("Theint", 100, 556);
+        showctx.fillText("Theint", 294, 556);
 
-    showctx.font = "11px Dancing Script";
-    showctx.fillText("June 3,2024", 70, 570);
-    showctx.fillText("June 3,2024", 264, 570);
+        showctx.font = "11px Dancing Script";
+        showctx.fillText("June 3,2024", 70, 570);
+        showctx.fillText("June 3,2024", 264, 570);
+      };
 
-    const ctx = document.getElementById("canvas").getContext("2d");
+      addText(showctx);
+      addText(ctx);
+      addText(printctx);
+    },
+  },
 
-    const downdepict = (options) => {
-      const myOptions = Object.assign({}, options);
-      return loadImage(myOptions.uri).then((img) => {
-        if (myOptions.color == "baw") {
-          ctx.filter = "grayscale(100%)";
-        }
-        ctx.drawImage(
-          img,
-          myOptions.x,
-          myOptions.y,
-          myOptions.sw,
-          myOptions.sh
-        );
-      });
-    };
+  created() {
+    document.querySelectorAll("#pics").forEach((pic) => {
+      pic.remove();
+    });
+  },
 
-    imgs.forEach(downdepict);
-
-    ctx.font = "13px ahronbd";
-    ctx.fillStyle = "#000000";
-    ctx.fillText("FOTOAUTOMAT", 48, 16);
-    ctx.fillText("FOTOAUTOMAT", 243, 16);
-
-    ctx.font = "15px Dancing Script";
-    ctx.fillStyle = "#000000";
-    ctx.fillText("Aung", 52, 555);
-    ctx.fillText("Aung", 245, 555);
-
-    ctx.fillText("&", 87, 556);
-    ctx.fillText("&", 281, 556);
-
-    ctx.fillText("Theint", 100, 556);
-    ctx.fillText("Theint", 294, 556);
-
-    ctx.font = "11px Dancing Script";
-    ctx.fillText("June 3,2024", 70, 570);
-    ctx.fillText("June 3,2024", 264, 570);
-
-    const printctx = document.getElementById("print-canvas").getContext("2d");
-
-    const printdepict = (options) => {
-      const myOptions = Object.assign({}, options);
-      return loadImage(myOptions.uri).then((img) => {
-        if (myOptions.color == "baw") {
-          printctx.filter = "grayscale(100%)";
-        }
-        printctx.drawImage(
-          img,
-          myOptions.x,
-          myOptions.y,
-          myOptions.sw,
-          myOptions.sh
-        );
-      });
-    };
-
-    imgs.forEach(printdepict);
-    printctx.fillStyle = "white";
-    printctx.fillRect(0, 0, printctx.canvas.width, printctx.canvas.height);
-
-    printctx.font = "13px ahronbd";
-    printctx.fillStyle = "#000000";
-    printctx.fillText("FOTOAUTOMAT", 48, 16);
-    printctx.fillText("FOTOAUTOMAT", 243, 16);
-
-    printctx.font = "15px Dancing Script";
-    printctx.fillStyle = "#000000";
-    printctx.fillText("Aung", 52, 555);
-    printctx.fillText("Aung", 245, 555);
-
-    printctx.fillText("&", 87, 556);
-    printctx.fillText("&", 281, 556);
-
-    printctx.fillText("Theint", 100, 556);
-    printctx.fillText("Theint", 294, 556);
-
-    printctx.font = "11px Dancing Script";
-    printctx.fillText("June 3,2024", 70, 570);
-    printctx.fillText("June 3,2024", 264, 570);
+  mounted() {
+    this.updateCanvas();
   },
 };
 </script>
 
-    <style>
+<style>
 @media print {
   #my-canvas,
   .logo-circle {
     display: none;
+    background-color: white !important;
+  }
+
+  #canvas {
+    background-color: white !important;
   }
 
   #print-canvas {
     display: block !important;
+    background-color: white !important;
   }
 }
 

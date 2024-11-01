@@ -1,4 +1,5 @@
 <template>
+
   <Head title="Camera" />
   <div id="bgColor">
     <div class="container-fluid">
@@ -6,80 +7,38 @@
         <div class="camera-hero" ref="tap" @click="tapToStart">
           <h1 class="text-dark start">Tap To Start</h1>
         </div>
-        <div
-          id="camera"
+        <div id="camera"
           class="vh-100 d-none overflow-hidden justify-content-center align-items-center position-relative"
-          style="background-color: #000"
-        >
-          <div
-            class="d-flex align-items-center position-relative"
-            style="width: 90%; height: 100%"
-          >
-            <h1
-              id="textCount"
-              class="text-white show-text"
-              v-show="countText"
-            ></h1>
-            <van-loading
-              vertical
-              text-color="#0094ff"
-              color="#1989fa"
-              class="display-1 position-absolute"
-              style="top: 43%; left: 45%"
-              v-show="loading"
-            >
+          style="background-color: #000">
+          <div class="d-flex overflow-auto align-items-center position-relative" style="width: 90%; height: 100%">
+            <h1 id="textCount" class="text-white show-text" v-show="countText"></h1>
+            <van-loading vertical text-color="#0094ff" color="#1989fa" class="display-1 position-absolute"
+              style="top: 43%; left: 45%" v-show="loading">
               <template #icon>
                 <van-icon name="star-o" size="50" />
               </template>
               Loading...
             </van-loading>
 
-            <video
-              src=""
-              class="w-100"
-              style="height: 90%"
-              id="video"
-              ref="camera"
-              autoplay
-            ></video>
-            <canvas
-              v-show="isPhotoTaken"
-              id="photoTaken"
-              ref="canvas"
-              :width="450"
-              :height="337.5"
-            ></canvas>
+            <video src="" class="w-100" style="height: 90%" id="video" ref="camera" autoplay></video>
+            <canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" :width="1600" :height="1800"></canvas>
+
           </div>
-          <div
-            style="width: 95%"
-            class="row position-absolute bottom-0 justify-content-between m-auto"
-          >
-            <div
-              id="picone"
-              class="col-3 p-5 d-flex justify-content-center align-items-center"
-              style="width: 22%; background-color: #ffffff79"
-            >
+          <div style="width: 95%" class="row position-absolute bottom-0 justify-content-between m-auto">
+            <div id="picone" class="col-3 p-5 d-flex justify-content-center align-items-center"
+              style="width: 22%; background-color: #ffffff79">
               <h1 class="fw-bold mb-0 p-3" id="one">1</h1>
             </div>
-            <div
-              id="pictwo"
-              class="col-3 p-5 d-flex justify-content-center align-items-center"
-              style="width: 22%; background-color: #ffffff79"
-            >
+            <div id="pictwo" class="col-3 p-5 d-flex justify-content-center align-items-center"
+              style="width: 22%; background-color: #ffffff79">
               <h1 class="fw-bold mb-0 p-3">2</h1>
             </div>
-            <div
-              id="picthree"
-              class="col-3 p-5 d-flex justify-content-center align-items-center"
-              style="width: 22%; background-color: #ffffff79"
-            >
+            <div id="picthree" class="col-3 p-5 d-flex justify-content-center align-items-center"
+              style="width: 22%; background-color: #ffffff79">
               <h1 class="fw-bold mb-0 p-3">3</h1>
             </div>
-            <div
-              id="picfour"
-              class="col-3 p-5 d-flex justify-content-center align-items-center"
-              style="width: 22%; background-color: #ffffff79"
-            >
+            <div id="picfour" class="col-3 p-5 d-flex justify-content-center align-items-center"
+              style="width: 22%; background-color: #ffffff79">
               <h1 class="fw-bold mb-0 p-3">4</h1>
             </div>
           </div>
@@ -282,6 +241,8 @@ export default {
     //   }
     // };
 
+
+
     const takePhoto = () => {
       if (photos.value.length !== 4) {
         time.value = 5;
@@ -309,7 +270,7 @@ export default {
             isPhotoTaken.value = !isPhotoTaken.value;
 
             const context = canvas.value.getContext("2d");
-            context.drawImage(camera.value, 0, 0, 450, 337.5);
+            context.drawImage(camera.value, 0, 0, 1600, 1800);
             photos.value.push(canvas.value.toDataURL("image/jpeg"));
 
             switch (photos.value.length) {
@@ -349,6 +310,8 @@ export default {
         });
       }
     };
+
+
 
     return {
       tapToStart,
