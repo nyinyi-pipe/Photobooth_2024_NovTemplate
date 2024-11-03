@@ -1,65 +1,113 @@
 <?php
 
-// app/Http/Controllers/TemplateController.php
-
 namespace App\Http\Controllers;
 
-use App\Services\TemplateService;
+use App\Models\Template;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Exception;
 
 class TemplateController extends Controller
 {
-    protected $templateService;
-
-    public function __construct(TemplateService $templateService)
-    {
-        $this->templateService = $templateService;
+    public function index() {
+        $template = Template::get();
+        return Inertia::render('Admin/Template/Index',['templateData' => $template]);
     }
 
-    public function index()
-    {
-        $templateData = $this->templateService->getAllTemplates();
-        return Inertia::render('Admin/Template/Index', ['templateData' => $templateData]);
-    }
-
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+        
         $request->validate([
-            "template" => 'required|image|mimes:jpeg,png,jpg',
+            "template" => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        try {
-            $template = $this->templateService->storeTemplate($request);
-            return response()->json(['data' => $template, 'status' => true], 200);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage(), 'status' => false], 400);
+        if (Template::count() >= 1) {
+            return response()->json([
+                'error' => 'Only one template can be uploaded.',
+                'status' => false
+            ]);
+        }else{
+            $filename = null;
+    
+            if ($request->hasFile('template')) {
+                
+                $filename = $request->file('template')->store('template', 'public');
+            } else {
+                logger("No template file uploaded."); 
+            }
+
+            $template = Template::create([
+                'user_id' => null,
+                'name' => $request->name ?? null,
+                'template' => $filename,
+                'description' => $request->description ?? null,
+            ]);
+        
+            
+            return response()->json([
+                'data' => $template,
+                'status' => true
+            ],200);
         }
+    
+        
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request,$id) {
+       
+
         $request->validate([
-            "template" => 'required|image|mimes:jpeg,png,jpg',
+            "template" => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        try {
-            $template = $this->templateService->updateTemplate($request, $id);
-            return response()->json(['data' => $template, 'status' => true], 200);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage(), 'status' => false], 400);
+        $template = Template::find($id);
+
+        $filename = $template->template;
+
+        if ($request->hasFile('template')) {
+           
+            if (!empty($filename)) {
+               
+                logger("Deleting existing template file: $filename");
+        
+                
+                if (Storage::disk('public')->exists($filename)) {
+                    Storage::disk('public')->delete($filename);
+                    logger("Successfully deleted: $filename");
+                } else {
+                    logger("File does not exist and cannot be deleted: $filename");
+                }
+            }
+        
+            
+            $filename = $request->file('template')->store('template', 'public');
         }
+        
+
+        $template->update([
+            'user_id' => null,
+            'name' => $request->name?? null,
+            'template' => $filename,
+            'description' => $request->description?? null,
+        ]);
+        return response()->json([
+            'data' => $template,
+            'status' => true
+        ],200);
     }
 
-    public function destroy($id)
-    {
-        try {
-            $this->templateService->deleteTemplate($id);
-            return response()->json(['status' => true], 200);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage(), 'status' => false], 400);
+    public function destroy($id) {
+        $template = Template::find($id);
+        $filename = $template->template;
+        if (Storage::disk('public')->exists($filename)) {
+            Storage::disk('public')->delete($filename);
+            logger("Successfully deleted: $filename");
+        } else {
+            logger("File does not exist and cannot be deleted: $filename");
         }
+
+        return response()->json([
+           'status' => true
+        ],200);
     }
+    
 }
-
