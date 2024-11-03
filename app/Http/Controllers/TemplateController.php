@@ -17,7 +17,7 @@ class TemplateController extends Controller
     public function store(Request $request) {
         
         $request->validate([
-            "template" => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            "template" => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         if (Template::count() >= 1) {
@@ -56,7 +56,7 @@ class TemplateController extends Controller
        
 
         $request->validate([
-            "template" => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            "template" => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         $template = Template::find($id);
@@ -67,12 +67,8 @@ class TemplateController extends Controller
            
             if (!empty($filename)) {
                
-                logger("Deleting existing template file: $filename");
-        
-                
                 if (Storage::disk('public')->exists($filename)) {
                     Storage::disk('public')->delete($filename);
-                    logger("Successfully deleted: $filename");
                 } else {
                     logger("File does not exist and cannot be deleted: $filename");
                 }

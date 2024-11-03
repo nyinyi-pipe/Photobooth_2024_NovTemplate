@@ -149,6 +149,7 @@ const submit = async () => {
             }
         } else {
             message.value = response.data.error;
+            addStaffModal.value.hide();
         }
     } catch (error) {
         form.value.errors = error.response?.data.errors || {};
@@ -185,6 +186,7 @@ const updateTemplate = async () => {
             }
         } else {
             message.value = response.data.error;
+            addStaffModal.value.hide();
         }
     } catch (error) {
         form.value.errors = error.response?.data.errors || {};
