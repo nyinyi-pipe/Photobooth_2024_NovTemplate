@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Template;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -49,5 +50,9 @@ class User extends Authenticatable
     public function getNameAttribute($value)
     {
         return ucwords($value);
+    }
+
+    public function templates(){
+        return $this->hasMany(Template::class);
     }
 }

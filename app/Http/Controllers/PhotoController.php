@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Photo;
+use App\Models\Template;
 use App\Models\Ticket;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,15 +18,22 @@ class PhotoController extends Controller
     public function index():Response
     {
         return Inertia::render('Front/Client/Photos', [
-            'photos' => Photo::where('user_id', auth()->user()->id)->latest()->first()
+            'photos' => Photo::where('user_id', auth()->user()->id)->latest()->first(),
+            'template' => Template::get()
         ]);
     }
 
     public function show(Photo $photo, Request $request)
     {
+        $template = Template::get();
         if($request->get('theme') == 'white'){
             return Inertia::render('Front/Client/Show', [
                 'photos' => $photo
+            ]);
+        }else if($request->get('theme') == 'custom'){
+            return Inertia::render('Front/Client/ShowCustomTemplate', [
+                'photos' => $photo,
+                'template' => $template
             ]);
         }else{
 

@@ -4,22 +4,6 @@
   <div class="vh-100 d-flex justify-content-center align-items-center position-relative">
     <div v-if="isModalOpen" class="absolute top-0 bottom-44 modal-overlay">
       <div id="Container" class="vw-100 vh-100">
-        <!-- <form class="form" @submit.prevent="submitEditForm">
-          <span class="close" @click="closeModal">&times;</span>
-          <div id="login-lable">Edit Event</div>
-          <label for="" class="z-40 text-white text-sm mb-[-10px] ms-0.5">Event Title</label>
-          <input v-model="eventData.title" class="form-content text-black" type="text" placeholder="Event Title" />
-          <span v-if="errors.title" class="text-red-600 text-sm">{{
-            errors.title[0]
-          }}</span>
-          <label for="" class="z-40 text-white text-sm mb-[-10px] ms-0.5">Event Date</label>
-          <input v-model="eventData.date" class="form-content text-black" type="date" />
-          <span v-if="errors.title" class="text-red-600 text-sm">{{
-            errors.title[0]
-          }}</span>
-          <button>Update</button>
-        </form> -->
-
         <div id="rays">
           <svg fill="none" viewBox="0 0 299 152" height="9em" width="18em" xmlns="http://www.w3.org/2000/svg">
             <path fill="url(#paint0_linear_8_3)"
@@ -119,10 +103,16 @@
         </div>
       </div>
     </div>
- 
+
     <div class="photo-container">
       <a @click="download" download="photobooth.jpeg" id="download" class="d-print-block">
         <canvas style="cursor: pointer" id="my-canvas-white" width="384" height="576"></canvas>
+      </a>
+      <a v-if="template[0]?.template" @click="download" download="photobooth.jpeg" id="downloadcustom" class="d-print-none">
+        <canvas
+            :style="{ cursor: 'pointer', backgroundImage: 'url(' + 'storage/' + template[0]?.template + ')', backgroundSize: 'cover' }"
+            id="my-canvas-custom" width="384" height="576">
+        </canvas>
       </a>
       <a @click="download" download="photobooth.jpeg" id="downloadblack" class="d-print-none">
         <canvas style="cursor: pointer" id="my-canvas-black" width="384" height="576"></canvas>
@@ -151,18 +141,14 @@ import { Link, router, Head } from "@inertiajs/vue3";
 
 export default {
   props: {
+    template: Object,
     photos: Object,
   },
   data() {
     return {
-      eventData: {
-        id: "",
-        is_complete: "",
-        title: "",
-        date: "",
-      },
-      errors : {},
+      errors: {},
       isModalOpen: false,
+      isCustomTemplate: false,
     };
   },
   components: {
@@ -173,6 +159,8 @@ export default {
     download(e) {
       if (e.target.id == "my-canvas-white") {
         router.get("/photos/" + this.photos.id, { theme: "white" });
+      } else if (e.target.id == "my-canvas-custom") {
+        router.get("/photos/" + this.photos.id, { theme: "custom" });
       } else {
         router.get("/photos/" + this.photos.id, { theme: "black" });
       }
@@ -216,83 +204,94 @@ export default {
       };
 
       const imgs = [
-      {
-        uri: this.photos.image[0],
-        x: 12,
-        y: 22,
-        sw: 165,
-        sh: 114,
-        color: this.photos.filter,
-      },
-      {
-        uri: this.photos.image[0],
-        x: 207,
-        y: 22,
-        sw: 165,
-        sh: 114,
-        color: this.photos.filter,
-      },
-      {
-        uri: this.photos.image[1],
-        x: 12,
-        y: 155,
-        sw: 165,
-        sh: 114,
-        color: this.photos.filter,
-      },
-      {
-        uri: this.photos.image[1],
-        x: 207,
-        y: 155,
-        sw: 165,
-        sh: 114,
-        color: this.photos.filter,
-      },
+        {
+          uri: this.photos.image[0],
+          x: 12,
+          y: 22,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[0],
+          x: 207,
+          y: 22,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[1],
+          x: 12,
+          y: 155,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[1],
+          x: 207,
+          y: 155,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
 
-      {
-        uri: this.photos.image[2],
-        x: 12,
-        y: 290,
-        sw: 165,
-        sh: 114,
-        color: this.photos.filter,
-      },
-      {
-        uri: this.photos.image[2],
-        x: 207,
-        y: 290,
-        sw: 165,
-        sh: 114,
-        color: this.photos.filter,
-      },
-      {
-        uri: this.photos.image[3],
-        x: 12,
-        y: 425,
-        sw: 165,
-        sh: 114,
-        color: this.photos.filter,
-      },
-      {
-        uri: this.photos.image[3],
-        x: 207,
-        y: 425,
-        sw: 165,
-        sh: 114,
-        color: this.photos.filter,
-      },
-    ];
+        {
+          uri: this.photos.image[2],
+          x: 12,
+          y: 290,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[2],
+          x: 207,
+          y: 290,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[3],
+          x: 12,
+          y: 425,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[3],
+          x: 207,
+          y: 425,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+      ];
 
       const showctx = getContext("my-canvas-white");
+      
       const showctxbl = getContext("my-canvas-black");
 
       imgs.forEach((img) => depict(showctx, img));
+      if (this.template[0]?.template) {
+        const showctxcus = getContext("my-canvas-custom");
+        imgs.forEach((img) => depict(showctxcus, img));
+        showctxcus.font = "13px ahronbd";
+        showctxcus.fillStyle = "#000000";
+        showctxcus.fillText("FOTOAUTOMAT", 48, 16);
+        showctxcus.fillText("FOTOAUTOMAT", 243, 16);
+      }
       imgs.forEach((img) => depict(showctxbl, img));
 
       showctx.font = "13px ahronbd";
       showctx.fillStyle = "#000000";
       showctx.fillText("FOTOAUTOMAT", 48, 16);
       showctx.fillText("FOTOAUTOMAT", 243, 16);
+
+      
 
       showctxbl.font = "13px ahronbd";
       showctxbl.fillStyle = "#ffffff";
@@ -333,9 +332,11 @@ export default {
   mounted() {
     this.updateCanvas();
     
+    
+    
   },
   created() {
-    
+
   },
 };
 </script>
@@ -354,203 +355,13 @@ export default {
   background-color: white;
 }
 
+#my-canvas-custom {
+  /* background-image: url('http://127.0.0.1:8000/storage/template/P2ZBmH9shAJxKaB9JQPjeH7IAFniZht4CT4gxaJa.png');
+  background-size: cover; */
+
+}
+
 #my-canvas-black {
   background-color: black;
-}
-
-.edit-button {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: rgb(20, 20, 20);
-  border: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
-  cursor: pointer;
-  transition-duration: 0.3s;
-  overflow: hidden;
-  position: relative;
-  text-decoration: none !important;
-}
-
-.edit-svgIcon {
-  width: 17px;
-  transition-duration: 0.3s;
-}
-
-.edit-svgIcon path {
-  fill: white;
-}
-
-.edit-button:hover {
-  width: 120px;
-  border-radius: 50px;
-  transition-duration: 0.3s;
-  background-color: rgb(255, 69, 69);
-  align-items: center;
-}
-
-.edit-button:hover .edit-svgIcon {
-  width: 20px;
-  transition-duration: 0.3s;
-  transform: translateY(60%);
-  -webkit-transform: rotate(360deg);
-  -moz-transform: rotate(360deg);
-  -o-transform: rotate(360deg);
-  -ms-transform: rotate(360deg);
-  transform: rotate(360deg);
-}
-
-.edit-button::before {
-  display: none;
-  content: "Edit Event";
-  color: white;
-  transition-duration: 0.3s;
-  font-size: 2px;
-}
-
-.edit-button:hover::before {
-  display: block;
-  padding-right: 10px;
-  font-size: 13px;
-  opacity: 1;
-  transform: translateY(0px);
-  transition-duration: 0.3s;
-}
-
-.close {
-  position: absolute;
-  top: 5px;
-  right: 15px;
-  cursor: pointer;
-  font-size: 30px;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
-}
-
-#Container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  height: 100%;
-}
-
-#rays {
-  z-index: 2;
-  position: relative;
-  bottom: -1.5em;
-  animation: rays 2s ease-in-out infinite;
-}
-
-.form {
-  position: relative;
-  top: 5em;
-  padding: 4%;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  border-radius: 0.5rem;
-  border: 4px solid #fff;
-  background: rgba(5, 295, 280, 0.72);
-  box-shadow: 0px 0px 64px 0px #82e1ff inset, 0px 0px 16px #a8fffaa6;
-  backdrop-filter: blur(3.5px);
-  gap: 12px;
-  animation: float 2s ease-in-out infinite;
-}
-
-#login-lable {
-  text-align: center;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 400;
-  letter-spacing: 5px;
-  text-shadow: 0px 0px 16px rgb(243, 243, 243);
-}
-
-.form-content {
-  height: 3em;
-  padding: 1px 8px;
-  color: white;
-  text-decoration: none;
-  letter-spacing: 1px;
-  font-weight: bold;
-  border-radius: 6px;
-  border: 2px solid #fff;
-  background: white;
-  box-shadow: 0px 0px 1px 3px #9ee5e3 inset, 0px 4px 4px 0px #181a6040;
-  text-shadow: 0px 1px 4px rgb(243, 243, 243);
-}
-
-.form-content:focus-visible {
-  outline: none;
-  text-decoration: none;
-}
-
-::placeholder {
-  font-weight: 300;
-  color: black !important;
-  letter-spacing: 0.1rem;
-  text-shadow: 0px 1px 5px rgb(66, 66, 66);
-}
-
-.form button {
-  cursor: pointer;
-  height: 2.7rem;
-  padding: 0%;
-  color: white;
-  font-size: 1em;
-  border-radius: 10px;
-  letter-spacing: 0.1rem;
-  border: 2px solid white;
-  background: linear-gradient(144deg, #9c11ffce, #2000eeb6 50%, #15efffbb);
-}
-
-.form button:hover {
-  position: relative;
-  bottom: 4px;
-  background: linear-gradient(144deg, #9c11ff, #2000ee 50%, #15fff3);
-}
-
-@keyframes float {
-  0% {
-    position: relative;
-  }
-
-  50% {
-    top: 50px;
-  }
-
-  100% {
-    position: relative;
-  }
-}
-
-@keyframes rays {
-  0% {
-    opacity: 0.6;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0.6;
-  }
 }
 </style>

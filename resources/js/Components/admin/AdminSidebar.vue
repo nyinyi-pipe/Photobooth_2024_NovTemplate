@@ -9,6 +9,7 @@
             <Link v-if="role" class="nav-link" :class="{ 'active': $page.url === '/admin/staffs' }" href="/admin/staffs">Staff Approvement</Link>
             <Link class="nav-link " :class="{ 'active': $page.url === '/admin/ticket' }" href="/admin/ticket">Tickets</Link>
             <Link v-if="role" class="nav-link " :class="{ 'active': $page.url === '/admin/reports' }" href="/admin/reports">Reports</Link>
+            <Link v-if="role" class="nav-link " :class="{ 'active': $page.url === '/admin/template' }" href="/admin/template">Template</Link>
           </nav>
         </div>
 </template>
