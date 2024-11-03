@@ -181,8 +181,8 @@ export default {
             const addText = (ctx) => {
                 ctx.font = "13px ahronbd";
                 ctx.fillStyle = "#000000";
-                ctx.fillText("FOTOAUTOMAT", 46, 16);
-                ctx.fillText("FOTOAUTOMAT", 243, 16);
+                ctx.fillText("FOTOAUTOMAT", 46, 18);
+                ctx.fillText("FOTOAUTOMAT", 243, 18);
             };
 
             showctx.then(addText);
