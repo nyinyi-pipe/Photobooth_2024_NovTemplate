@@ -157,10 +157,10 @@ export default {
                 const backgroundImagePath = `/storage/${this.template[0]?.template}`;
                 const backgroundImg = await loadImage(backgroundImagePath);
 
-                const drawWidth = canvas.width;
-                const drawHeight = (backgroundImg.height / backgroundImg.width) * drawWidth; 
+                const drawWidth = 384;
+                const drawHeight = 576; 
                 const drawX = 0;
-                const drawY = (canvas.height - drawHeight) / 14; 
+                const drawY = 0; 
                 ctx.drawImage(backgroundImg, drawX, drawY, drawWidth, drawHeight);
 
             };
@@ -174,7 +174,7 @@ export default {
                 return ctx;
             };
 
-            const showctx = renderImages("my-canvas", 2);
+            const showctx = renderImages("my-canvas", 4);
             const ctx = renderImages("canvas", 4);
             const printctx = renderImages("print-canvas", 4);
 
@@ -208,7 +208,7 @@ export default {
 
 .canvas-hidden {
     cursor: pointer; 
-    display: none; 
+    display: none;
 }
 
 @media print {

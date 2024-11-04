@@ -8,6 +8,7 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
+        <script src="https://unpkg.com/konva@9.3.16/konva.min.js"></script>
 
         <link rel="manifest" href="/manifest.json">
         <!-- Scripts -->
