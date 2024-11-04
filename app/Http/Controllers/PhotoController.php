@@ -28,17 +28,20 @@ class PhotoController extends Controller
         $template = Template::get();
         if($request->get('theme') == 'white'){
             return Inertia::render('Front/Client/Show', [
-                'photos' => $photo
+                'photos' => $photo,
+                // 'photoCount' => $request->photoCount ?? 3
             ]);
         }else if($request->get('theme') == 'custom'){
             return Inertia::render('Front/Client/ShowCustomTemplate', [
                 'photos' => $photo,
-                'template' => $template
+                'template' => $template,
+                // 'photoCount' => $request->photoCount ?? 3
             ]);
         }else{
 
             return Inertia::render('Front/Client/ShowBl', [
-                'photos' => $photo
+                'photos' => $photo,
+                // 'photoCount' => $request->photoCount ?? 3
             ]);
         }
     }

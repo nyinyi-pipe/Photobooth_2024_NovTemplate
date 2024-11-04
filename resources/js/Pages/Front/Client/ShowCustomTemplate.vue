@@ -1,17 +1,14 @@
 <template>
+
     <Head title="Photo" />
     <div class="vh-100 d-flex justify-content-center align-items-center position-relative">
         <div class="photo-container">
             <a @click="download" download="photobooth.jpeg" id="download">
-                <canvas 
-                    class="canvas-background" 
-                    style="cursor: pointer;" 
-                    id="my-canvas" 
-                    width="384" 
-                    height="576">
+                <canvas class="canvas-background" style="cursor: pointer;" id="my-canvas" width="384" height="576">
                 </canvas>
                 <canvas class="canvas-hidden" style="cursor: pointer;" id="canvas" width="384" height="576"></canvas>
-                <canvas class="canvas-hidden" style="cursor: pointer;" id="print-canvas" width="384" height="576"></canvas>
+                <canvas class="canvas-hidden" style="cursor: pointer;" id="print-canvas" width="384"
+                    height="576"></canvas>
             </a>
         </div>
         <div class="logo-circle"></div>
@@ -32,11 +29,6 @@ export default {
         Link,
         Head,
     },
-    data() {
-        return {
-
-        };
-    },
     methods: {
         download() {
             window.onafterprint = () => {
@@ -55,10 +47,10 @@ export default {
 
             const getContext = (canvasId, scale) => {
                 const canvas = document.getElementById(canvasId);
-                canvas.width = 384 * scale; 
+                canvas.width = 384 * scale;
                 canvas.height = 576 * scale;
                 canvas.style.width = "384px";
-                canvas.style.height = "576px"; 
+                canvas.style.height = "576px";
                 const ctx = canvas.getContext("2d");
                 ctx.scale(scale, scale);
                 return ctx;
@@ -84,71 +76,71 @@ export default {
                 });
             };
 
-            const imgs = [
+            let imgs = [
                 {
-                    uri: this.photos.image[0],
-                    x: 12,
-                    y: 22,
-                    sw: 165,
-                    sh: 114,
-                    color: this.photos.filter,
-                },
-                {
-                    uri: this.photos.image[0],
-                    x: 207,
-                    y: 22,
-                    sw: 165,
-                    sh: 114,
-                    color: this.photos.filter,
-                },
-                {
-                    uri: this.photos.image[1],
-                    x: 12,
-                    y: 155,
-                    sw: 165,
-                    sh: 114,
-                    color: this.photos.filter,
-                },
-                {
-                    uri: this.photos.image[1],
-                    x: 207,
-                    y: 155,
-                    sw: 165,
-                    sh: 114,
-                    color: this.photos.filter,
-                },
-                {
-                    uri: this.photos.image[2],
-                    x: 12,
-                    y: 290,
-                    sw: 165,
-                    sh: 114,
-                    color: this.photos.filter,
-                },
-                {
-                    uri: this.photos.image[2],
-                    x: 207,
-                    y: 290,
-                    sw: 165,
-                    sh: 114,
-                    color: this.photos.filter,
-                },
-                {
-                    uri: this.photos.image[3],
-                    x: 12,
-                    y: 425,
-                    sw: 165,
-                    sh: 114,
-                    color: this.photos.filter,
-                },
-                {
-                    uri: this.photos.image[3],
-                    x: 207,
-                    y: 425,
-                    sw: 165,
-                    sh: 114,
-                    color: this.photos.filter,
-                },
+                        uri: this.photos.image[0],
+                        x: 18,
+                        y: 15,
+                        sw: 165,
+                        sh: 114,
+                        color: this.photos.filter,
+                    },
+                    {
+                        uri: this.photos.image[0],
+                        x: 201,
+                        y: 15,
+                        sw: 165,
+                        sh: 114,
+                        color: this.photos.filter,
+                    },
+                    {
+                        uri: this.photos.image[1],
+                        x: 18,
+                        y: 140,
+                        sw: 165,
+                        sh: 114,
+                        color: this.photos.filter,
+                    },
+                    {
+                        uri: this.photos.image[1],
+                        x: 201,
+                        y: 140,
+                        sw: 165,
+                        sh: 114,
+                        color: this.photos.filter,
+                    },
+                    {
+                        uri: this.photos.image[2],
+                        x: 18,
+                        y: 265,
+                        sw: 165,
+                        sh: 114,
+                        color: this.photos.filter,
+                    },
+                    {
+                        uri: this.photos.image[2],
+                        x: 201,
+                        y: 265,
+                        sw: 165,
+                        sh: 114,
+                        color: this.photos.filter,
+                    },
+                    {
+                        uri: this.photos.image[3],
+                        x: 18,
+                        y: 390,
+                        sw: 165,
+                        sh: 114,
+                        color: this.photos.filter,
+                    },
+                    {
+                        uri: this.photos.image[3],
+                        x: 201,
+                        y: 390,
+                        sw: 165,
+                        sh: 114,
+                        color: this.photos.filter,
+                    }
             ];
 
             const setBackgroundImage = async (canvasId) => {
@@ -158,16 +150,16 @@ export default {
                 const backgroundImg = await loadImage(backgroundImagePath);
 
                 const drawWidth = 384;
-                const drawHeight = 576; 
+                const drawHeight = 576;
                 const drawX = 0;
-                const drawY = 0; 
+                const drawY = 0;
                 ctx.drawImage(backgroundImg, drawX, drawY, drawWidth, drawHeight);
 
             };
 
             const renderImages = async (canvasId, scale) => {
                 const ctx = getContext(canvasId, scale);
-                await setBackgroundImage(canvasId);  
+                await setBackgroundImage(canvasId);
                 for (const img of imgs) {
                     await depict(img, ctx);
                 }
@@ -181,13 +173,13 @@ export default {
             const addText = (ctx) => {
                 ctx.font = "13px ahronbd";
                 ctx.fillStyle = "#000000";
-                ctx.fillText("FOTOAUTOMAT", 46, 18);
-                ctx.fillText("FOTOAUTOMAT", 243, 18);
+                ctx.fillText("FOTOAUTOMAT", 46, 16);
+                ctx.fillText("FOTOAUTOMAT", 243, 16);
             };
 
-            showctx.then(addText);
-            ctx.then(addText);
-            printctx.then(addText);
+            // showctx.then(addText);
+            // ctx.then(addText);
+            // printctx.then(addText);
         },
     },
     created() {
@@ -203,22 +195,30 @@ export default {
 
 <style>
 .canvas-background {
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .canvas-hidden {
-    cursor: pointer; 
+    cursor: pointer;
     display: none;
 }
 
+.photo-selection {
+    position: absolute;
+    top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
 @media print {
+
     #my-canvas,
     .logo-circle {
         display: none;
     }
 
     #print-canvas {
-        display: block !important; 
+        display: block !important;
     }
 }
 
@@ -228,6 +228,6 @@ export default {
 }
 
 @page {
-    size: 4in 6in; 
+    size: 4in 6in;
 }
 </style>

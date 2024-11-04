@@ -96,10 +96,11 @@ class TemplateController extends Controller
         $filename = $template->template;
         if (Storage::disk('public')->exists($filename)) {
             Storage::disk('public')->delete($filename);
-            logger("Successfully deleted: $filename");
+            
         } else {
             logger("File does not exist and cannot be deleted: $filename");
         }
+        $template->delete();
 
         return response()->json([
            'status' => true

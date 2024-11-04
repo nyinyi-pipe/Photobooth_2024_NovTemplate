@@ -103,15 +103,15 @@
         </div>
       </div>
     </div>
-
     <div class="photo-container">
       <a @click="download" download="photobooth.jpeg" id="download" class="d-print-block">
         <canvas style="cursor: pointer" id="my-canvas-white" width="384" height="576"></canvas>
       </a>
-      <a v-if="template[0]?.template" @click="download" download="photobooth.jpeg" id="downloadcustom" class="d-print-none">
+      <a v-if="template[0]?.template" @click="download" download="photobooth.jpeg" id="downloadcustom"
+        class="d-print-none">
         <canvas
-            :style="{ cursor: 'pointer', backgroundImage: 'url(' + 'storage/' + template[0]?.template + ')', backgroundSize: 'cover' }"
-            id="my-canvas-custom" width="384" height="576">
+          :style="{ cursor: 'pointer', backgroundImage: 'url(' + 'storage/' + template[0]?.template + ')', backgroundSize: 'cover' }"
+          id="my-canvas-custom" width="384" height="576">
         </canvas>
       </a>
       <a @click="download" download="photobooth.jpeg" id="downloadblack" class="d-print-none">
@@ -149,6 +149,7 @@ export default {
       errors: {},
       isModalOpen: false,
       isCustomTemplate: false,
+      photoCount: 3,
     };
   },
   components: {
@@ -158,11 +159,11 @@ export default {
   methods: {
     download(e) {
       if (e.target.id == "my-canvas-white") {
-        router.get("/photos/" + this.photos.id, { theme: "white" });
+        router.get("/photos/" + this.photos.id, { theme: "white", photoCount: this.photoCount });
       } else if (e.target.id == "my-canvas-custom") {
-        router.get("/photos/" + this.photos.id, { theme: "custom" });
+        router.get("/photos/" + this.photos.id, { theme: "custom", photoCount: this.photoCount });
       } else {
-        router.get("/photos/" + this.photos.id, { theme: "black" });
+        router.get("/photos/" + this.photos.id, { theme: "black", photoCount: this.photoCount });
       }
     },
     updateCanvas() {
@@ -236,53 +237,116 @@ export default {
           sh: 114,
           color: this.photos.filter,
         },
+        {
+          uri: this.photos.image[2],
+          x: 12,
+          y: 290,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[2],
+          x: 207,
+          y: 290,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[3],
+          x: 12,
+          y: 425,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[3],
+          x: 207,
+          y: 425,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        }
+      ];
 
+      const imgsCustom = [
         {
-          uri: this.photos.image[2],
-          x: 12,
-          y: 290,
+          uri: this.photos.image[0],
+          x: 18,
+          y: 15,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[0],
+          x: 201,
+          y: 15,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[1],
+          x: 18,
+          y: 140,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[1],
+          x: 201,
+          y: 140,
           sw: 165,
           sh: 114,
           color: this.photos.filter,
         },
         {
           uri: this.photos.image[2],
-          x: 207,
-          y: 290,
+          x: 18,
+          y: 265,
+          sw: 165,
+          sh: 114,
+          color: this.photos.filter,
+        },
+        {
+          uri: this.photos.image[2],
+          x: 201,
+          y: 265,
           sw: 165,
           sh: 114,
           color: this.photos.filter,
         },
         {
           uri: this.photos.image[3],
-          x: 12,
-          y: 425,
+          x: 18,
+          y: 390,
           sw: 165,
           sh: 114,
           color: this.photos.filter,
         },
         {
           uri: this.photos.image[3],
-          x: 207,
-          y: 425,
+          x: 201,
+          y: 390,
           sw: 165,
           sh: 114,
           color: this.photos.filter,
-        },
+        }
       ];
 
       const showctx = getContext("my-canvas-white");
-      
+
       const showctxbl = getContext("my-canvas-black");
 
       imgs.forEach((img) => depict(showctx, img));
       if (this.template[0]?.template) {
         const showctxcus = getContext("my-canvas-custom");
-        imgs.forEach((img) => depict(showctxcus, img));
-        showctxcus.font = "13px ahronbd";
-        showctxcus.fillStyle = "#000000";
-        showctxcus.fillText("FOTOAUTOMAT", 48, 16);
-        showctxcus.fillText("FOTOAUTOMAT", 243, 16);
+        imgsCustom.forEach((img) => depict(showctxcus, img));
+
       }
       imgs.forEach((img) => depict(showctxbl, img));
 
@@ -290,8 +354,6 @@ export default {
       showctx.fillStyle = "#000000";
       showctx.fillText("FOTOAUTOMAT", 48, 16);
       showctx.fillText("FOTOAUTOMAT", 243, 16);
-
-      
 
       showctxbl.font = "13px ahronbd";
       showctxbl.fillStyle = "#ffffff";
@@ -331,9 +393,9 @@ export default {
   },
   mounted() {
     this.updateCanvas();
-    
-    
-    
+
+
+
   },
   created() {
 
@@ -353,6 +415,13 @@ export default {
 
 #my-canvas-white {
   background-color: white;
+}
+
+.photo-selection {
+  position: absolute;
+  top: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 #my-canvas-custom {
