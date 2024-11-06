@@ -3,10 +3,11 @@
   <Head title="Camera" />
   <div id="bgColor">
     <div class="container-fluid">
-      <div class="vh-100 position-relative">
-        <div class="camera-hero" ref="tap" @click="tapToStart">
+      <div class="vh-100 position-relative ">
+        <div v-if="templateValid" class="camera-hero" ref="tap" @click="tapToStart">
           <h1 class="text-dark start">Tap To Start</h1>
         </div>
+        <NoTemplateText v-else class="vh-100 d-flex justify-content-center align-items-center position-relative" />
         <div id="camera"
           class="vh-100 d-none overflow-hidden justify-content-center align-items-center position-relative"
           style="background-color: #000">
@@ -53,11 +54,13 @@
 import { ref, onMounted } from "vue";
 import { router, Head } from "@inertiajs/vue3";
 import ClientLayout from "@/Components/client/Layout/ClientLayout.vue";
+import NoTemplateText from "@/Components/NoTemplateText.vue";
 
 export default {
   components: {
     ClientLayout,
     Head,
+    NoTemplateText
   },
   setup() {
     const tap = ref(null);
@@ -74,6 +77,31 @@ export default {
     const countText = ref(false);
     const loading = ref(false);
     let textCount = null;
+    const templateValid = ref(false);
+
+
+    onMounted(() => {
+      checkTemplateValidity();
+    });
+
+
+    const checkTemplateValidity = async () => {
+      try {
+
+        const response = await fetch("/camera/check-template");
+        const data = await response.json();
+        console.log(data);
+
+        if (data.status) {
+          templateValid.value = true;
+        } else {
+          templateValid.value = false;
+        }
+      } catch (error) {
+        console.error("Error checking template:", error);
+        templateValid.value = false;
+      }
+    };
 
     const tapToStart = () => {
       tap.value.style.display = "none";
@@ -323,6 +351,7 @@ export default {
       canvas,
       isPhotoTaken,
       loading,
+      templateValid
     };
   },
 };
