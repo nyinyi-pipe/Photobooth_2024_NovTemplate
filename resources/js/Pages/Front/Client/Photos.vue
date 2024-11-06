@@ -103,7 +103,9 @@
         </div>
       </div>
     </div>
-    <div class="photo-container">
+
+    <div v-if="template[0]?.template" class="photo-container">
+      <div class="canvas-text">This is preview page</div>
       <a @click="download" download="photobooth.jpeg" id="download" class="d-print-block">
         <canvas style="cursor: pointer" id="my-canvas-white" width="384" height="576"></canvas>
       </a>
@@ -118,6 +120,9 @@
         <canvas style="cursor: pointer" id="my-canvas-black" width="384" height="576"></canvas>
       </a>
     </div>
+
+    <NoTemplateText v-else/>
+
     <div class="logo-circle"></div>
     <img src="/images/Rabit-removebg.svg" width="65" height="65" class="hidden d-none" id="logo" alt="" />
     <img src="/images/Rabit-removebg-white.svg" width="65" height="65" class="hidden d-none" id="logo-white" alt="" />
@@ -138,8 +143,12 @@
 <script>
 import Swal from 'sweetalert2'
 import { Link, router, Head } from "@inertiajs/vue3";
+import NoTemplateText from '@/Components/NoTemplateText.vue';
 
 export default {
+  components:{
+    NoTemplateText
+  },
   props: {
     template: Object,
     photos: Object,
@@ -204,77 +213,77 @@ export default {
         });
       };
 
-      const imgs = [
-        {
-          uri: this.photos.image[0],
-          x: 12,
-          y: 22,
-          sw: 165,
-          sh: 114,
-          color: this.photos.filter,
-        },
-        {
-          uri: this.photos.image[0],
-          x: 207,
-          y: 22,
-          sw: 165,
-          sh: 114,
-          color: this.photos.filter,
-        },
-        {
-          uri: this.photos.image[1],
-          x: 12,
-          y: 155,
-          sw: 165,
-          sh: 114,
-          color: this.photos.filter,
-        },
-        {
-          uri: this.photos.image[1],
-          x: 207,
-          y: 155,
-          sw: 165,
-          sh: 114,
-          color: this.photos.filter,
-        },
-        {
-          uri: this.photos.image[2],
-          x: 12,
-          y: 290,
-          sw: 165,
-          sh: 114,
-          color: this.photos.filter,
-        },
-        {
-          uri: this.photos.image[2],
-          x: 207,
-          y: 290,
-          sw: 165,
-          sh: 114,
-          color: this.photos.filter,
-        },
-        {
-          uri: this.photos.image[3],
-          x: 12,
-          y: 425,
-          sw: 165,
-          sh: 114,
-          color: this.photos.filter,
-        },
-        {
-          uri: this.photos.image[3],
-          x: 207,
-          y: 425,
-          sw: 165,
-          sh: 114,
-          color: this.photos.filter,
-        }
-      ];
+      // const imgs = [
+      //   {
+      //     uri: this.photos.image[0],
+      //     x: 12,
+      //     y: 22,
+      //     sw: 165,
+      //     sh: 114,
+      //     color: this.photos.filter,
+      //   },
+      //   {
+      //     uri: this.photos.image[0],
+      //     x: 207,
+      //     y: 22,
+      //     sw: 165,
+      //     sh: 114,
+      //     color: this.photos.filter,
+      //   },
+      //   {
+      //     uri: this.photos.image[1],
+      //     x: 12,
+      //     y: 155,
+      //     sw: 165,
+      //     sh: 114,
+      //     color: this.photos.filter,
+      //   },
+      //   {
+      //     uri: this.photos.image[1],
+      //     x: 207,
+      //     y: 155,
+      //     sw: 165,
+      //     sh: 114,
+      //     color: this.photos.filter,
+      //   },
+      //   {
+      //     uri: this.photos.image[2],
+      //     x: 12,
+      //     y: 290,
+      //     sw: 165,
+      //     sh: 114,
+      //     color: this.photos.filter,
+      //   },
+      //   {
+      //     uri: this.photos.image[2],
+      //     x: 207,
+      //     y: 290,
+      //     sw: 165,
+      //     sh: 114,
+      //     color: this.photos.filter,
+      //   },
+      //   {
+      //     uri: this.photos.image[3],
+      //     x: 12,
+      //     y: 425,
+      //     sw: 165,
+      //     sh: 114,
+      //     color: this.photos.filter,
+      //   },
+      //   {
+      //     uri: this.photos.image[3],
+      //     x: 207,
+      //     y: 425,
+      //     sw: 165,
+      //     sh: 114,
+      //     color: this.photos.filter,
+      //   }
+      // ];
 
       const imgsCustom = [
         {
           uri: this.photos.image[0],
-          x: 18,
+          x: 12,
           y: 15,
           sw: 165,
           sh: 114,
@@ -282,7 +291,7 @@ export default {
         },
         {
           uri: this.photos.image[0],
-          x: 201,
+          x: 207,
           y: 15,
           sw: 165,
           sh: 114,
@@ -290,7 +299,7 @@ export default {
         },
         {
           uri: this.photos.image[1],
-          x: 18,
+          x: 12,
           y: 140,
           sw: 165,
           sh: 114,
@@ -298,7 +307,7 @@ export default {
         },
         {
           uri: this.photos.image[1],
-          x: 201,
+          x: 207,
           y: 140,
           sw: 165,
           sh: 114,
@@ -306,7 +315,7 @@ export default {
         },
         {
           uri: this.photos.image[2],
-          x: 18,
+          x: 12,
           y: 265,
           sw: 165,
           sh: 114,
@@ -314,7 +323,7 @@ export default {
         },
         {
           uri: this.photos.image[2],
-          x: 201,
+          x: 207,
           y: 265,
           sw: 165,
           sh: 114,
@@ -322,7 +331,7 @@ export default {
         },
         {
           uri: this.photos.image[3],
-          x: 18,
+          x: 12,
           y: 390,
           sw: 165,
           sh: 114,
@@ -330,7 +339,7 @@ export default {
         },
         {
           uri: this.photos.image[3],
-          x: 201,
+          x: 207,
           y: 390,
           sw: 165,
           sh: 114,
@@ -338,57 +347,59 @@ export default {
         }
       ];
 
-      const showctx = getContext("my-canvas-white");
+      // const showctx = getContext("my-canvas-white");
 
-      const showctxbl = getContext("my-canvas-black");
+      // const showctxbl = getContext("my-canvas-black");
 
-      imgs.forEach((img) => depict(showctx, img));
+      // imgs.forEach((img) => depict(showctx, img));
+      // imgs.forEach((img) => depict(showctxbl, img));
+
       if (this.template[0]?.template) {
         const showctxcus = getContext("my-canvas-custom");
         imgsCustom.forEach((img) => depict(showctxcus, img));
 
       }
-      imgs.forEach((img) => depict(showctxbl, img));
 
-      showctx.font = "13px ahronbd";
-      showctx.fillStyle = "#000000";
-      showctx.fillText("FOTOAUTOMAT", 48, 16);
-      showctx.fillText("FOTOAUTOMAT", 243, 16);
 
-      showctxbl.font = "13px ahronbd";
-      showctxbl.fillStyle = "#ffffff";
-      showctxbl.fillText("FOTOAUTOMAT", 48, 16);
-      showctxbl.fillText("FOTOAUTOMAT", 243, 16);
+      // showctx.font = "13px ahronbd";
+      // showctx.fillStyle = "#000000";
+      // showctx.fillText("FOTOAUTOMAT", 48, 16);
+      // showctx.fillText("FOTOAUTOMAT", 243, 16);
 
-      showctx.font = "15px Dancing Script";
-      showctx.fillStyle = "#000000";
-      showctx.fillText("Aung", 52, 555);
-      showctx.fillText("Aung", 245, 555);
+      // showctxbl.font = "13px ahronbd";
+      // showctxbl.fillStyle = "#ffffff";
+      // showctxbl.fillText("FOTOAUTOMAT", 48, 16);
+      // showctxbl.fillText("FOTOAUTOMAT", 243, 16);
 
-      showctx.fillText("&", 87, 556);
-      showctx.fillText("&", 281, 556);
+      // showctx.font = "15px Dancing Script";
+      // showctx.fillStyle = "#000000";
+      // showctx.fillText("Aung", 52, 555);
+      // showctx.fillText("Aung", 245, 555);
 
-      showctx.fillText("Theint", 100, 556);
-      showctx.fillText("Theint", 294, 556);
+      // showctx.fillText("&", 87, 556);
+      // showctx.fillText("&", 281, 556);
 
-      showctx.font = "11px Dancing Script";
-      showctx.fillText("June 3,2024", 70, 570);
-      showctx.fillText("June 3,2024", 264, 570);
+      // showctx.fillText("Theint", 100, 556);
+      // showctx.fillText("Theint", 294, 556);
 
-      showctxbl.font = "15px Dancing Script";
-      showctxbl.fillStyle = "#ffffff";
-      showctxbl.fillText("Aung", 52, 555);
-      showctxbl.fillText("Aung", 245, 555);
+      // showctx.font = "11px Dancing Script";
+      // showctx.fillText("June 3,2024", 70, 570);
+      // showctx.fillText("June 3,2024", 264, 570);
 
-      showctxbl.fillText("&", 87, 555);
-      showctxbl.fillText("&", 281, 555);
+      // showctxbl.font = "15px Dancing Script";
+      // showctxbl.fillStyle = "#ffffff";
+      // showctxbl.fillText("Aung", 52, 555);
+      // showctxbl.fillText("Aung", 245, 555);
 
-      showctxbl.fillText("Theint", 100, 555);
-      showctxbl.fillText("Theint", 294, 555);
+      // showctxbl.fillText("&", 87, 555);
+      // showctxbl.fillText("&", 281, 555);
 
-      showctxbl.font = "11px Dancing Script";
-      showctxbl.fillText("June 3,2024", 70, 570);
-      showctxbl.fillText("June 3,2024", 264, 570);
+      // showctxbl.fillText("Theint", 100, 555);
+      // showctxbl.fillText("Theint", 294, 555);
+
+      // showctxbl.font = "11px Dancing Script";
+      // showctxbl.fillText("June 3,2024", 70, 570);
+      // showctxbl.fillText("June 3,2024", 264, 570);
     },
   },
   mounted() {
@@ -415,6 +426,7 @@ export default {
 
 #my-canvas-white {
   background-color: white;
+  display: none !important;
 }
 
 .photo-selection {
@@ -424,13 +436,20 @@ export default {
   gap: 10px;
 }
 
-#my-canvas-custom {
-  /* background-image: url('http://127.0.0.1:8000/storage/template/P2ZBmH9shAJxKaB9JQPjeH7IAFniZht4CT4gxaJa.png');
-  background-size: cover; */
-
-}
 
 #my-canvas-black {
   background-color: black;
+  display: none !important;
+}
+
+.canvas-text {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
 }
 </style>

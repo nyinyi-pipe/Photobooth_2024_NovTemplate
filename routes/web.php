@@ -7,6 +7,7 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ReadyController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\TemplateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,6 +45,7 @@ Route::middleware(['auth','verified','pending'])->group(function () {
 Route::group(['middleware'=>['auth','verified','pending','camera']], function () {
     //camera
     Route::get('/camera', [PhotoController::class,'clientIndex'])->name('client.index');
+    Route::get('/camera/check-template', [TemplateController::class,'checkTemplate'])->name('template.check');
     Route::post('/camera', [PhotoController::class,'store'])->name('client.store');
     //filter
     Route::get('/photo/filter', [PhotoController::class,'filter'])->name('photo.filter');

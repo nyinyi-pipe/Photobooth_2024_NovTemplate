@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Template;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,6 +16,7 @@ class ReadyController extends Controller
     public function index()
     {
         session()->get('code') ? session()->forget('code') : "";
+    
         return Inertia::render("Front/Ready");
     }
 

@@ -15,7 +15,7 @@
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-success" @click="openAddTemplate">Add Template</button>
                     <div v-if="templateData[0]?.id">
-                        <button class="btn btn-warning ms-1" @click="openEditTemplate(templateData[0]?.id)">Edit Template</button>
+                        <!-- <button class="btn btn-warning ms-1" @click="openEditTemplate(templateData[0]?.id)">Edit Template</button> -->
                         <button class="btn btn-danger ms-1" @click="openDeleteTemplate(templateData[0]?.id)">Delete Template</button>
                     </div>
                 </div>

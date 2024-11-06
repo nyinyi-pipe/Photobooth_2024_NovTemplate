@@ -117,8 +117,11 @@ class PhotoController extends Controller
 
     public function downloadIndex(Photo $photo):Response
     {
+        $template = Template::get();
+        logger($template);
         return Inertia::render('Front/Client/Download', [
-            'photos'=>$photo
+            'photos'=>$photo,
+            'template'=> $template
         ]);
     }
 }

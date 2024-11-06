@@ -106,5 +106,18 @@ class TemplateController extends Controller
            'status' => true
         ],200);
     }
+
+    public function checkTemplate(){
+        $template = Template::get();
+        if (count($template) > 0) {
+            return response()->json([
+               'status' => true
+            ],200);
+        }else {
+            return response()->json([
+               'status' => false
+            ],200);
+        }
+    }
     
 }
