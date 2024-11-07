@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Intervention\Image\ImageManager;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Crypt;
 
 class PhotoController extends Controller
 {
@@ -53,10 +54,13 @@ class PhotoController extends Controller
         ]);
     }
 
-    public function qrcode(Photo $photo):Response
+    public function qrcode(Photo $photo): Response
     {
+        $hashedId = Crypt::encryptString($photo->id);
+
         return Inertia::render("Front/Client/Qrcode", [
-            'photo' => $photo
+            'photo' => $photo,
+            'hashedId' => $hashedId,
         ]);
     }
 
@@ -115,8 +119,11 @@ class PhotoController extends Controller
         return redirect()->route('photo.filter');
     }
 
-    public function downloadIndex(Photo $photo):Response
+    public function downloadIndex($id)
     {
+        
+        $photoId = Crypt::decryptString($id);
+        $photo = Photo::findOrFail($photoId);
         $template = Template::get();
         logger($template);
         return Inertia::render('Front/Client/Download', [

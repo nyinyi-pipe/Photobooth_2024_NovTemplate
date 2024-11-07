@@ -33,12 +33,13 @@ import QRCodeVue3 from "qrcode-vue3";
 export default {
   props: {
     photo: Object,
+    hashedId : String,
   },
   components: {
     QRCodeVue3,
     Link,
   },
-  setup({ photo }) {
+  setup({ photo,hashedId }) {
     const qrcode = ref("");
     const closeTime = ref(30);
     let second = ref(null);
@@ -47,7 +48,7 @@ export default {
       router.get("/ready");
     };
     onMounted(() => {
-      qrcode.value = window.location.origin + "/photo/download/" + photo.id;
+      qrcode.value = window.location.origin + "/photo/download/" + hashedId;
       second.value = setInterval(() => {
         closeTime.value -= 1;
         if (closeTime.value == 0) {
