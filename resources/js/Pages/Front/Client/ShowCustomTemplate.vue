@@ -49,14 +49,17 @@ export default {
     props: {
         photos: Object,
         template: Array,
+        photoId : String,
     },
     setup(props) {
         const loading = ref(true);
         const logo = ref(null);
-
+        console.log('====================================');
+        console.log(props.photoId);
+        console.log('====================================');
         const download = () => {
             window.onafterprint = () => {
-                router.get("/photo/qrcode/" + props.photos.id);
+                router.get("/photo/qrcode/" + props.photoId);
             };
             window.print();
             const downloadLink = document.getElementById("download");

@@ -27,6 +27,8 @@ class PhotoController extends Controller
     public function show(Photo $photo, Request $request)
     {
         $template = Template::get();
+        $photoIdHashed = Crypt::encryptString($photo->id);
+        logger($photoIdHashed);
         if($request->get('theme') == 'white'){
             return Inertia::render('Front/Client/Show', [
                 'photos' => $photo,
@@ -36,7 +38,7 @@ class PhotoController extends Controller
             return Inertia::render('Front/Client/ShowCustomTemplate', [
                 'photos' => $photo,
                 'template' => $template,
-                // 'photoCount' => $request->photoCount ?? 3
+                'photoId' => $photoIdHashed ?? $photo->id
             ]);
         }else{
 
@@ -54,8 +56,10 @@ class PhotoController extends Controller
         ]);
     }
 
-    public function qrcode(Photo $photo): Response
+    public function qrcode($id): Response
     {
+        $photoId = Crypt::decryptString($id);
+        $photo = Photo::findOrFail($photoId);
         $hashedId = Crypt::encryptString($photo->id);
 
         return Inertia::render("Front/Client/Qrcode", [
@@ -75,7 +79,7 @@ class PhotoController extends Controller
 
     public function clientIndex():Response
     {
-        // return Inertia::render('Front/Client/Home');
+       
         return Inertia::render('Front/Client/CameraTest');
     }
 
@@ -121,6 +125,7 @@ class PhotoController extends Controller
 
     public function downloadIndex($id)
     {
+        
         
         $photoId = Crypt::decryptString($id);
         $photo = Photo::findOrFail($photoId);
