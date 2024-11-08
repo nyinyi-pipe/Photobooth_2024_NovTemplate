@@ -68,8 +68,6 @@ Route::get('/', [HomeController::class,'index'])->name('front.index');
 Route::get('/photo/download/{photo}', [PhotoController::class,'downloadIndex'])->name('photo.download');
 
 
-Route::get('/tests', TestController::class)->name('tests');
-
 
 
 require __DIR__.'/auth.php';

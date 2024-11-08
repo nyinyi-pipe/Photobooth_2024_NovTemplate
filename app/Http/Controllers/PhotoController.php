@@ -18,21 +18,25 @@ class PhotoController extends Controller
 {
     public function index():Response
     {
+        $photo = Photo::where('user_id', auth()->user()->id)->latest()->first();
+        $photoId = Crypt::encryptString($photo->id);
         return Inertia::render('Front/Client/Photos', [
-            'photos' => Photo::where('user_id', auth()->user()->id)->latest()->first(),
-            'template' => Template::get()
+            'photos' => $photo,
+            'template' => Template::get(),
+            'photoId' => $photoId ?? $photo->id,
         ]);
     }
 
-    public function show(Photo $photo, Request $request)
+    public function show($id, Request $request)
     {
+        $photoId = Crypt::decryptString($id);
+        $photo = Photo::findOrFail($photoId);
         $template = Template::get();
         $photoIdHashed = Crypt::encryptString($photo->id);
-        logger($photoIdHashed);
+        
         if($request->get('theme') == 'white'){
             return Inertia::render('Front/Client/Show', [
                 'photos' => $photo,
-                // 'photoCount' => $request->photoCount ?? 3
             ]);
         }else if($request->get('theme') == 'custom'){
             return Inertia::render('Front/Client/ShowCustomTemplate', [
@@ -44,7 +48,6 @@ class PhotoController extends Controller
 
             return Inertia::render('Front/Client/ShowBl', [
                 'photos' => $photo,
-                // 'photoCount' => $request->photoCount ?? 3
             ]);
         }
     }

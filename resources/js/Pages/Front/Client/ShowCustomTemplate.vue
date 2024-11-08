@@ -54,9 +54,6 @@ export default {
     setup(props) {
         const loading = ref(true);
         const logo = ref(null);
-        console.log('====================================');
-        console.log(props.photoId);
-        console.log('====================================');
         const download = () => {
             window.onafterprint = () => {
                 router.get("/photo/qrcode/" + props.photoId);

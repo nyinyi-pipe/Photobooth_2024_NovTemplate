@@ -55,12 +55,12 @@ export default {
   props: {
     template: Object,
     photos: Object,
+    photoId : String,
   },
   data() {
     return {
       errors: {},
       isCustomTemplate: false,
-      photoCount: 3,
     };
   },
   components: {
@@ -70,11 +70,11 @@ export default {
   methods: {
     download(e) {
       if (e.target.id == "my-canvas-white") {
-        router.get("/photos/" + this.photos.id, { theme: "white", photoCount: this.photoCount });
+        router.get("/photos/" + this.photoId, { theme: "white" });
       } else if (e.target.id == "my-canvas-custom") {
-        router.get("/photos/" + this.photos.id, { theme: "custom", photoCount: this.photoCount });
+        router.get("/photos/" + this.photoId, { theme: "custom" });
       } else {
-        router.get("/photos/" + this.photos.id, { theme: "black", photoCount: this.photoCount });
+        router.get("/photos/" + this.photoId, { theme: "black" });
       }
     },
     updateCanvas() {
